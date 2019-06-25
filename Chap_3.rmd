@@ -11,7 +11,7 @@ require(robustbase)
 require(MASS)
 ```
 
-Introduction to the par() function
+### Introduction to the par() function
 You already saw how the mfrow parameter to the par() function could be used to plot multiple graphs in one pane. The par() function also allows you to set many other graphics parameters, whose values will remain in effect until they are reset by a subsequent par() call.
 
 Specifically, a call to the par() function with no parameters specified will return a list whose element names each specify a graphics parameter and whose element values specify the corresponding default values of these parameters. These parameters may be set by a call in the form par(name = value) where name is the name of the parameter to be set and value is the value to be assigned to this parameter.
@@ -35,7 +35,7 @@ names(plot_pars)
 length(plot_pars)
 ```
 
-Exploring the type option
+### Exploring the type option
 One of the important graphics parameters that can be set with the par() function is mfrow, which specifies the numbers of rows and columns in an array of plots. Valid values for this parameter are two-element numerical vectors, whose first element specifies the number of rows in the plot array and the second element specifies the number of columns.
 
 A more detailed discussion of using the mfrow parameter is given in Chapter 4 of this course. For now, note that to specify a plot array with three rows and one column, the command would be par(mfrow = c(3, 1)).
@@ -78,8 +78,9 @@ plot(Animals2$brain,type="s")
 title("steps")
 par <- plot_pars
 ```
-
-The surprising utility of the type "n" option
+  
+    
+### The surprising utility of the type "n" option
 The type = "n" option was discussed in the video and this exercise provides a simple example. This option is especially useful when we are plotting data from multiple sources on a common set of axes. In such cases, we can compute ranges for the x- and y-axes so that all data points will appear on the plot, and then add the data with subsequent calls to points() or lines() as appropriate.
 
 This exercise asks you to generate a plot that compares mileage vs. horsepower data from two different sources: the mtcars data frame in the datasets package and the Cars93 data frame in the MASS package. To distinguish the different results from these data sources, the graphics parameter pch is used to specify point shapes. See ?points for a comprehensive list of some pch values and their corresponding point shapes.
@@ -118,7 +119,8 @@ points(Cars93$Horsepower, Cars93$MPG.city,
 points(Cars93$Horsepower, Cars93$MPG.highway,
        pch = 2)
 ```
-Exploring the type option
+  
+### Exploring the type option
 One of the important graphics parameters that can be set with the par() function is mfrow, which specifies the numbers of rows and columns in an array of plots. Valid values for this parameter are two-element numerical vectors, whose first element specifies the number of rows in the plot array and the second element specifies the number of columns.
 
 A more detailed discussion of using the mfrow parameter is given in Chapter 4 of this course. For now, note that to specify a plot array with three rows and one column, the command would be par(mfrow = c(3, 1)).
@@ -166,4 +168,88 @@ title("steps")
 
 ```
 
+## The lines() function and line types
+As noted in Chapter 2, numerical data is often assumed to conform approximately to a Gaussian probability distribution, characterized by the bell curve. One point of this exercise is to show what this bell curve looks like for exactly Gaussian data and the other is to show how the lines() function can be used to add lines to an existing plot.
+
+The curves you are asked to draw here have the same basic shape but differ in their details (specifically, the means and standard deviations of these Gaussian distributions are different). For this reason, it is useful to draw these curves with different line types to help us distinguish them.
+
+Note that line types are set by the lty argument, with the default value lty = 1 specifying solid lines, lty = 2 specifying dashed lines, and lty = 3 specifying dotted lines. Also note that the lwd argument specifies the relative width.
+
+Instructions
+100 XP
+Create a numerical variable x with 200 evenly-spaced values from 0 to 10.
+Using the dnorm() function, generate a vector gauss1 of Gaussian probability densities for this range of x values, with mean 2 and standard deviation 0.2.
+Using the dnorm() function, generate a vector gauss2 of Gaussian probability densities for this range of x values, with mean 4 and standard deviation 0.5.
+Generate a plot of gauss1 vs. x with lines and a y-axis label "Gaussian probability density".
+Using the lines() function, add a second dashed line for gauss2 vs. x with relative width 3 (refer to the line type plot to select the lty parameter).
+
+```{r}
+# Create the numerical vector x
+x <- seq(0, 10, length = 200)
+
+# Compute the Gaussian density for x with mean 2 and standard deviation 0.2
+gauss1 <- dnorm(x, mean = 2, sd = 0.2)
+
+# Compute the Gaussian density with mean 4 and standard deviation 0.5
+gauss2 <- dnorm(x, mean = 4, sd = 0.5)
+
+# Plot the first Gaussian density
+plot(x, gauss1, type = "l", ylab = "Gaussian probability density")
+
+# Add lines for the second Gaussian density
+lines(x, gauss2, lty = 2, lwd = 3)
+```
+
+  
+### The points() function and point types
+One advantage of specifying the pch argument locally is that, in a call to functions like plot() or points(), local specification allows us to make pch depend on a variable in our dataset. This provides a simple way of indicating different data subsets with different point shapes or symbols.
+
+This exercise asks you to generate two plots of mpg vs. hp from the mtcars data frame in the datasets package. The first plot specifies the point shapes using numerical values of the pch argument defined by the cyl variable in the mtcars data frame. The second plot illustrates the fact that pch can also be specified as a vector of single characters, causing each point to be drawn as the corresponding character.
+
+Instructions
+100 XP
+Create an empty plot of mpg vs. hp using the type = "n" option from the mtcars data frame, with axis labels "Horsepower" and "Gas mileage".
+Using the points() function, add the mpg vs. hp data, with pch specified by the numeric values of cyl.
+Repeat both of the previous steps, except with pch specified by the character values of cyl.
+
+```{r}
+# Create an empty plot using type = "n"
+plot(mtcars$hp, mtcars$mpg, type = "n",
+     xlab = "Horsepower", ylab = "Gas mileage")
+
+# Add points with shapes determined by cylinder number
+points(mtcars$hp, mtcars$mpg, pch = mtcars$cyl)
+
+# Create a second empty plot
+plot(mtcars$hp, mtcars$mpg, type = "n",
+     xlab = "Horsepower", ylab = "Gas mileage")
+
+# Add points with shapes as cylinder characters
+points(mtcars$hp, mtcars$mpg, 
+       pch = as.character(mtcars$cyl))
+```
+  
+## Adding trend lines from linear regression models
+The low-level plot function abline() adds a straight line to an existing plot. This line is specified by an intercept parameter a and a slope parameter b, and the simplest way to set these parameters is directly. For example, the command abline(a = 0, b = 1) adds an equality reference line with zero intercept and unit (i.e. 1) slope: points for which y = x fall on this reference line, while points with y > x fall above it, and points with y < x fall below it.
+
+An alternative way of specifying these parameters is through a linear regression model that determines them from data. One common application is to generate a scatterplot of y versus x, then fit a linear model that predicts y from x, and finally call abline() to add this best fit line to the plot.
+
+This exercise asks you to do this for the Gas versus Temp data from the whiteside data frame in the MASS package. The standard R function that fits linear regression models is lm(), which supports the formula interface. Thus, to fit a linear model that predicts y from x in the data frame df, the call would be lm(y ~ x, data = df). This call returns a linear model object, which can then be passed as an argument to the abline() function to draw the desired line on our plot.
+
+Instructions
+100 XP
+Use the lm() function to create linear_model, a linear regression model that predicts Gas from Temp from the whiteside data frame.
+Generate a scatterplot of Gas vs. Temp.
+Using the abline() function, add a dashed reference line (set line type to 2) that shows the predictions of linear_model.
+
+```{r}
+# Build a linear regression model for the whiteside data
+linear_model <- lm(Gas ~ Temp, data = whiteside)
+
+# Create a Gas vs. Temp scatterplot from the whiteside data
+plot(whiteside$Temp, whiteside$Gas)
+
+# Use abline() to add the linear regression line
+abline(linear_model, lty = 2)
+```
 
