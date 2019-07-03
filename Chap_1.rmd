@@ -1,0 +1,207 @@
+---
+title: "Chap_1"
+author: "teacher"
+date: "July 3, 2019"
+output: html_document
+---
+
+## Creating an exploratory plot array
+
+In this exercise, you'll construct a simple exploratory plot from a data frame that gives values for three variables, recorded over two winter heating seasons. The variables are:
+
+Temp: a measure of the outside temperature during one week
+Gas: the amount of heating gas consumed during that week
+Insul: a categorical variable with two values, indicating whether the measurements were made before or after an insulation upgrade was made to the house
+Instructions
+100 XP
+The whiteside dataset is available in your workspace.
+
+Apply the plot() function to the whiteside data frame.
+
+#### Hint
+
+The whiteside dataset is available in your workspace.
+
+Apply the plot() function to the whiteside data frame.
+
+```{r}
+require(MASS) # omit from datacamp answer
+# whiteside is in your workspace
+str(whiteside)
+
+# Plot whiteside data
+plot(whiteside)
+```
+## Creating an explanatory scatterplot
+In constrast to the exploratory analysis plot you created in the previous exercise, this exercise asks you to create a simple explanatory scatterplot, suitable for sharing with others.
+
+Here, it is important to make editorial choices in constructing this plot, rather than depending entirely on default options. In particular, the important editorial aspects of this plot are: first, the variables to be plotted, and second, the axis labels, which are specified as strings to the xlab and ylab arguments to the plot() function.
+
+Instructions
+100 XP
+Use the plot() function to construct a scatterplot of the heating gas consumption, Gas, versus the outside temperature, Temp, from the whiteside data frame. Label the x- and y-axes to indicate the variables in the plot (i.e. "Outside temperature" and "Heating gas consumption", respectively.)
+
+#### Hint
+
+Hint
+Plot the Temp column of whiteside on the x-axis and the Gas column on the y-axis. Use the xlab and ylab arguments of the plot() function to specify the labels.
+
+```{r}
+# Plot Gas vs. Temp
+plot(whiteside$Temp, whiteside$Gas,
+     xlab = "Outside temperature",
+     ylab = "Heating gas consumption")
+```
+
+## The plot() function is generic
+One of the key features of the plot() function is that it is generic, meaning that the results of applying the function depend on the nature of the object to which it is applied.
+
+In the first exercise of this chapter, applying the plot() function to the whiteside data frame resulted in a plot array. Here, we obtain a fundamentally different kind of result when we apply the same function to Insul, a factor variable from the same data frame.
+
+Instructions
+100 XP
+Apply the plot() function to the Insul variable from the whiteside data frame.
+
+#### Hint
+
+Hint
+Simply call plot() on whiteside$Insul.
+
+```{r}
+# Apply the plot() function to Insul
+plot(whiteside$Insul)
+```
+## Adding details to a plot using point shapes, color, and reference lines
+Adding additional details to your explanatory plots can help emphasize certain aspects of your data. For example, by specifying the pch and col arguments to the plot() function, you can add different point shapes and colors to show how different variables or subsets of your data relate to each other. In addition, you can add a new set of points to your existing scatterplot with the points() function, and add reference lines with the abline() function.
+
+This exercise asks you to use these methods to create an enhanced scatterplot that effectively shows how three variables in the Cars93 data frame relate to each other. These variables are:
+
+Price: the average sale price for a car
+Max.Price: the highest recorded price for that car
+Min.Price: the lowest recorded price for that car
+Instructions
+100 XP
+Use the plot() function to create a scatterplot of the Max.Price variable versus the Price variable, specifying the pch and col parameters so the data points are represented as red solid triangles. The pch value to plot solid triangles is 17.
+Use the points() function to add a second set of points to your scatterplot, representing Min.Price versus Price, where the new data points are represented as blue solid circles. The pch value for solid circles is 16.
+Use the abline() function to add a dashed equality reference line (i.e., a line with y-intercept 0 and slope 1). See abline() to learn what arguments a and b refer to.
+
+#### Hint
+
+Hint
+To get red points, specify col = "red" in your plot() call.
+To add blue points to your plot, call points() with the desired x- and y-variables with col = "blue".
+Recall that the standard equation of a line is y = a + bx where a represents the y-intercept and b the slope. The abline() function takes each as inputs and plots the corresponding line.
+
+```{r}
+# Cars93 is in your workspace
+str(Cars93)
+
+# Plot Max.Price vs. Price as red triangles
+plot(Cars93$Price, Cars93$Max.Price,
+     pch = 17, col = "red")
+
+# Add Min.Price vs. Price as blue circles
+points(Cars93$Price, Cars93$Min.Price,
+       pch = 16, col = "blue")
+
+# Add an equality reference line with abline()
+abline(a = 0, b = 1, lty = 2)
+```
+
+## Creating multiple plot arrays
+You can plot multiple graphs on a single pane using the par() function with its mfrow parameter. For example, par(mfrow = c(1, 2)) creates a plot array with 1 row and 2 columns, allowing you to view two graphs side-by-side. This way, you can compare and contrast different datasets or different views of the same dataset. This exercise asks you to compare two views of the Animals2 dataset from the robustbase package, differing in how its variables are represented.
+
+The objective of this exercise is to emphasize that the original representation of the variables that we have in a dataset is not always the best one for visualization or analysis. By representing the original variables in log scale, for example, we can better see and understand the data.
+
+Instructions
+100 XP
+Instructions
+100 XP
+Use the par() function and set the mfrow parameter to create a side-by-side plot array with 1 row and 2 columns.
+Use the plot() function to create a scatterplot of the variables brain versus body from this data frame, without specifying additional arguments.
+See what happens when you run title("Original representation") after your first call to plot().
+Use the plot() function again, but this time with log = "xy", to generate a plot of both the x and y variables in log scale.
+Use the title() function to add "Log-log plot" as the title to the second plot.
+
+#### Hint
+
+Hint
+Recall that par(mfrow = c(1, 2)) generates a side-by-side plot array with 1 row and 2 columns.
+For your plots, Animals2$body should be on the x-axis and Animals2$brain should be on the y-axis.
+The title() function adds a title to the plot generated from the last plot() call.
+The second plot() call creates a plot in the second column of your plot array.  
+
+```{r}
+require(robustbase) #dont includr in datacamp answer
+# Animals2 is in your workspace
+str(Animals2)
+
+# Set up the side-by-side plot array
+par(mfrow = c(1, 2))
+
+# First plot: brain vs. body in its original form
+plot(Animals2$body, Animals2$brain)
+
+# Add the first title
+title("Original representation")
+
+# Second plot: log-log plot of brain vs. body
+plot(Animals2$body, Animals2$brain,
+     log = "xy")
+
+# Add the second title
+title("Log-log plot")
+```
+
+## Avoid pie charts
+The same dataset can be displayed or summarized in many different ways, but some are much more suitable than others.
+
+Despite their general popularity, pie charts are often a poor choice. Though R allows pie charts with the pie() function, even the help file for this function argues against their use. Specifically, the help file includes a "Note" that begins with the words: "Pie charts are a very bad way of displaying information."
+
+Bar charts are a recommended alternative and, in this exercise, you'll see why.
+
+Instructions
+100 XP
+The dataCar dataset from the insuranceData package is in your workspace.
+
+Call par() with the mfrow parameter to create a side-by-side plot array with 1 row and 2 columns.
+Call table() and sort() to create a table of counts of the distinct levels of the veh_body variable in the dataCar data frame, in decreasing order. Call this table tbl.
+Pass tbl to pie() to create a pie chart as the left-hand plot. Use title() to title this plot "Pie chart".
+Similarly, use barplot() and title() to create a barplot, specifying las = 2 to make both sets of labels perpendicular to the axes, and using cex.names = 0.5 to make the name labels half the default size. Title this plot "Bar chart".
+
+#### Hint
+
+Hint
+Recall that mfrow = c(1, 2) creates the desired plot array.
+To create tbl, use:
+sort(table(dataCar$veh_body),
+           decreasing = TRUE)
+The pie() function called with a data table like tbl creates a pie chart.
+The barplot() function called with a data table like tbl creates a barplot of the data.  
+
+```{r}
+require(insuranceData)
+data("dataCar")#dont include in datacamp ans
+# dataCar is in your workspace
+str(dataCar)
+
+# Set up a side-by-side plot array
+par(mfrow = c(1, 2))
+
+# Create a table of veh_body record counts and sort
+tbl <- sort(table(dataCar$veh_body),
+            decreasing = TRUE)
+
+# Create the pie chart
+pie(tbl)
+
+# Give it a title
+title("Pie chart")
+
+# Create the barplot with perpendicular, half-sized labels
+barplot(tbl, las = 2, cex.names = 0.5)
+
+# Add a title
+title("Bar chart")
+```
+
